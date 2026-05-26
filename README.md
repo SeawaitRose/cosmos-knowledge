@@ -181,37 +181,5 @@ R = e^(-t / S), S = half_life / ln(2)
 - `.local.json` 默认被 `.gitignore` 忽略，不应提交到 GitHub。
 - “测试每日/每周”会立即生成一条测试消息并发送。
 
-## 隐私与 GitHub 发布
 
-本项目默认忽略真实 `knowledge/`。公开仓库应提交 `examples/demo-knowledge/`，不要提交私人知识库。
 
-发布前检查：
-
-```bash
-rg -n "open.feishu|webhook|secret|token|password|你的名字|私人|身份证|手机号|邮箱" .
-find . -iname "*.pdf" -o -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png"
-```
-
-确认不要上传：
-
-- 真实 `knowledge/`
-- 飞书 webhook
-- `.local.json`
-- 原始 PDF、图片、XMind、聊天记录
-- 任何私人报告或视频素材
-
-如果你希望用 Git 管理自己的私人知识库，可以删除 `.gitignore` 中的 `knowledge/` 规则，但请确保仓库是私有的。
-
-## 验证
-
-```bash
-python3 -B skills/personal-knowledge-growth/scripts/validate_graph.py examples/demo-knowledge/data/graph.json
-python3 -B scripts/validate_knowledge_package.py examples/demo-knowledge/spec/knowledge-package-example.json
-python3 -B scripts/send_lark_weekly_growth_report.py --dry-run --json
-```
-
-启动服务后也可以访问：
-
-```bash
-curl http://127.0.0.1:8765/api/status
-```
