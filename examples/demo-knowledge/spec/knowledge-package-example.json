@@ -1,0 +1,79 @@
+{
+  "package_version": 1,
+  "package_id": "pkg:demo-counterexample-practice-2026-05-26",
+  "created_at": "2026-05-26",
+  "source": {
+    "skill": "personal-knowledge-growth",
+    "scenario": "practice",
+    "language": "zh-CN",
+    "origin": "公开示例知识包，用于验证网站上传预检和脚本校验。",
+    "description": "演示如何把一次行动复盘沉淀成卡片、节点、关系和生命周期记录。"
+  },
+  "documents": [
+    {
+      "path": "knowledge/cards/demo-counterexample-practice.md",
+      "kind": "card",
+      "title": "反例校准练习示例卡",
+      "source_note": "由 personal-knowledge-growth skill 生成的标准知识包示例。",
+      "content_markdown": "# 反例校准练习示例卡\n\n## 核心观点\n\n每次准备沉淀一个观点前，先写出一个可能推翻它的反例，可以避免知识库变成自我确认机器。\n\n## 行动实验\n\n本周选择一个高置信度观点，补充一个失败场景和一个现实检验信号。\n\n## 复习问题\n\n- 这个观点在哪个场景下不成立？\n- 我是否只是因为喜欢这个观点才提高了它的置信度？\n"
+    }
+  ],
+  "graph_patch": {
+    "nodes": [
+      {
+        "id": "action:demo-counterexample-practice",
+        "type": "action",
+        "label": "反例校准练习",
+        "summary": "给一个高置信度观点补充失败场景，避免知识库只强化原有偏好。",
+        "source": "method:sharp-question-loop",
+        "tags": ["反例", "行动实验", "校准"],
+        "confidence": "medium",
+        "metadata": {
+          "card_path": "knowledge/cards/demo-counterexample-practice.md",
+          "status": "active",
+          "review_questions": [
+            "这个观点在哪个场景下不成立？",
+            "我是否只是因为喜欢这个观点才提高了它的置信度？"
+          ],
+          "cosmos": {
+            "source_anchor": "theme:metacognitive-practice",
+            "review_half_life_days": 14
+          }
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge:sharp-question-loop:applies_to:counterexample-practice",
+        "type": "applies_to",
+        "from": "method:sharp-question-loop",
+        "to": "action:demo-counterexample-practice",
+        "label": "把尖锐追问落实为反例练习",
+        "evidence": "示例卡要求为高置信度观点补充失败场景。",
+        "confidence": "medium"
+      },
+      {
+        "id": "edge:counterexample-practice:supports:management-over-clipping",
+        "type": "supports",
+        "from": "action:demo-counterexample-practice",
+        "to": "claim:management-over-clipping",
+        "label": "反例校准支持判断校正",
+        "evidence": "知识管理的价值在持续校正判断，而不是收集更多条目。",
+        "confidence": "medium"
+      }
+    ]
+  },
+  "lifecycle_patch": {
+    "records": {
+      "action:demo-counterexample-practice": {
+        "last_reviewed_at": "2026-05-26",
+        "review_count": 1,
+        "last_practiced_at": "2026-05-26",
+        "practice_count": 1,
+        "mastery": 0.35,
+        "stage": "active"
+      }
+    },
+    "syntheses": []
+  }
+}

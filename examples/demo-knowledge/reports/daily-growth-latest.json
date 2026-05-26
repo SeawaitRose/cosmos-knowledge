@@ -1,0 +1,34 @@
+{
+  "date": "2026-05-26",
+  "focus_question": {
+    "text": "自动化应该提醒什么，而不是制造噪音？",
+    "source": "question:automation-calibration",
+    "reason": "这是示例库中置信度最低、最适合继续深聊的问题。"
+  },
+  "fuzzy_points": [
+    {
+      "text": "每日提醒应该选择问题还是行动？",
+      "source": "question:automation-calibration",
+      "reason": "提醒目标还需要校准。"
+    }
+  ],
+  "supplements": [
+    {
+      "text": "给自动化提醒补一个失败场景：提醒过多导致用户忽略。",
+      "source": "knowledge/cards/automation-calibration.md"
+    }
+  ],
+  "action_review": {
+    "text": "每日 10 分钟知识回访",
+    "source": "action:daily-knowledge-review",
+    "status": "active",
+    "prompt": "今天是否只选择了一个模糊点，而不是打开一长串任务？"
+  },
+  "recommendation": {
+    "title": "示例：提问的艺术",
+    "author": "Demo",
+    "domain": ["提问", "学习方法"],
+    "why_read": "示例库当前需要补充提问质量的判断标准。"
+  },
+  "ai_prompt": "请使用 personal-knowledge-growth skill，围绕“自动化应该提醒什么，而不是制造噪音？”追问我：事实、反例、边界和下一步行动信号分别是什么？"
+}

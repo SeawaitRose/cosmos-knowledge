@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "updated_at": "2026-05-26",
+  "records": {
+    "action:daily-knowledge-review": {
+      "last_reviewed_at": "2026-05-26",
+      "review_count": 1,
+      "last_practiced_at": "2026-05-26",
+      "practice_count": 1,
+      "mastery": 0.45,
+      "stage": "active"
+    },
+    "question:automation-calibration": {
+      "review_count": 0,
+      "practice_count": 0,
+      "mastery": 0.2,
+      "stage": "fading"
+    }
+  },
+  "syntheses": []
+}

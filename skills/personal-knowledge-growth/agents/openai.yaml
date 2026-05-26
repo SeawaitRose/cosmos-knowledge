@@ -1,0 +1,7 @@
+interface:
+  display_name: "Personal Knowledge Growth"
+  short_description: "Grow a visual personal knowledge base from thinking paths"
+  default_prompt: "Use $personal-knowledge-growth to help me think deeper, reconstruct the thinking path, debate the idea, and capture high-value insights into my knowledge base."
+
+policy:
+  allow_implicit_invocation: true

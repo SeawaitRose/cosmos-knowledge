@@ -1,0 +1,30 @@
+{
+  "week_start": "2026-05-20",
+  "week_end": "2026-05-26",
+  "generated_at": "2026-05-26T09:00:00",
+  "weekly_theme": {
+    "text": "会追问的个人知识宇宙",
+    "reason": "示例库展示输入、追问、行动、复习的闭环。",
+    "source": "demo"
+  },
+  "open_loops": [
+    {
+      "text": "自动化应该提醒什么，而不是制造噪音？",
+      "source": "question:automation-calibration",
+      "reason": "low confidence"
+    }
+  ],
+  "actions": [
+    {
+      "text": "每日 10 分钟知识回访",
+      "source": "action:daily-knowledge-review",
+      "status": "active",
+      "prompt": "过去一周是否真的完成过一次知识回访？"
+    }
+  ],
+  "reading_recommendations": [],
+  "next_ai_prompts": [
+    "请帮我把一个最近的想法转成 Knowledge Package，但先用事实、反例、边界和行动信号追问我。"
+  ],
+  "message": "示例周报：本周主线是会追问的个人知识宇宙。"
+}

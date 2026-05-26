@@ -1,0 +1,104 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-25",
+  "style": "semi-realistic sci-fi celestial texture library",
+  "format": "webp",
+  "profiles": {
+    "star": {
+      "primary": "#f5d06d",
+      "emissive": true,
+      "clouds": false,
+      "craters": false,
+      "assets": {
+        "surface": "site/assets/celestials/star/surface.webp",
+        "detail": "site/assets/celestials/star/detail.webp",
+        "emissive": "site/assets/celestials/star/emissive.webp"
+      }
+    },
+    "ocean": {
+      "primary": "#1c5f9f",
+      "emissive": false,
+      "clouds": true,
+      "craters": false,
+      "assets": {
+        "surface": "site/assets/celestials/ocean/surface.webp",
+        "detail": "site/assets/celestials/ocean/detail.webp",
+        "cloud": "site/assets/celestials/ocean/cloud.webp"
+      }
+    },
+    "forest": {
+      "primary": "#174c36",
+      "emissive": false,
+      "clouds": true,
+      "craters": false,
+      "assets": {
+        "surface": "site/assets/celestials/forest/surface.webp",
+        "detail": "site/assets/celestials/forest/detail.webp",
+        "cloud": "site/assets/celestials/forest/cloud.webp"
+      }
+    },
+    "ice": {
+      "primary": "#7fb9d8",
+      "emissive": false,
+      "clouds": true,
+      "craters": true,
+      "assets": {
+        "surface": "site/assets/celestials/ice/surface.webp",
+        "detail": "site/assets/celestials/ice/detail.webp",
+        "cloud": "site/assets/celestials/ice/cloud.webp"
+      }
+    },
+    "desert": {
+      "primary": "#9b6a36",
+      "emissive": false,
+      "clouds": false,
+      "craters": true,
+      "assets": {
+        "surface": "site/assets/celestials/desert/surface.webp",
+        "detail": "site/assets/celestials/desert/detail.webp"
+      }
+    },
+    "volcanic": {
+      "primary": "#21171a",
+      "emissive": true,
+      "clouds": false,
+      "craters": true,
+      "assets": {
+        "surface": "site/assets/celestials/volcanic/surface.webp",
+        "detail": "site/assets/celestials/volcanic/detail.webp",
+        "emissive": "site/assets/celestials/volcanic/emissive.webp"
+      }
+    },
+    "metallic": {
+      "primary": "#586377",
+      "emissive": false,
+      "clouds": false,
+      "craters": true,
+      "assets": {
+        "surface": "site/assets/celestials/metallic/surface.webp",
+        "detail": "site/assets/celestials/metallic/detail.webp"
+      }
+    },
+    "gas": {
+      "primary": "#7356a6",
+      "emissive": false,
+      "clouds": true,
+      "craters": false,
+      "assets": {
+        "surface": "site/assets/celestials/gas/surface.webp",
+        "detail": "site/assets/celestials/gas/detail.webp",
+        "cloud": "site/assets/celestials/gas/cloud.webp"
+      }
+    },
+    "comet": {
+      "primary": "#2f4657",
+      "emissive": false,
+      "clouds": false,
+      "craters": true,
+      "assets": {
+        "surface": "site/assets/celestials/comet/surface.webp",
+        "detail": "site/assets/celestials/comet/detail.webp"
+      }
+    }
+  }
+}

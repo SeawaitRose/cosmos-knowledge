@@ -1,0 +1,368 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "knowledge-package.schema.json",
+  "title": "Personal Knowledge Package",
+  "type": "object",
+  "required": [
+    "package_version",
+    "package_id",
+    "created_at",
+    "source",
+    "documents",
+    "graph_patch"
+  ],
+  "properties": {
+    "package_version": {
+      "const": 1
+    },
+    "package_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "skill",
+        "scenario",
+        "language",
+        "origin",
+        "description"
+      ],
+      "properties": {
+        "skill": {
+          "type": "string",
+          "const": "personal-knowledge-growth"
+        },
+        "scenario": {
+          "type": "string",
+          "enum": [
+            "reading",
+            "reflection",
+            "complaint",
+            "decision",
+            "idea",
+            "practice",
+            "import"
+          ]
+        },
+        "language": {
+          "type": "string",
+          "default": "zh-CN"
+        },
+        "origin": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+        "documents": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "path",
+          "kind",
+          "title",
+          "content_markdown"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "pattern": "^knowledge/(books|cards|imports)/[A-Za-z0-9_./-]+\\.md$"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "book",
+              "card",
+              "import"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "content_markdown": {
+            "type": "string"
+          },
+          "source_note": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "graph_patch": {
+      "type": "object",
+      "required": [
+        "nodes",
+        "edges"
+      ],
+      "properties": {
+        "nodes": {
+          "type": "array",
+          "minItems": 0,
+          "items": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "edges": {
+          "type": "array",
+          "minItems": 0,
+          "items": {
+            "$ref": "#/$defs/edge"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "lifecycle_patch": {
+      "type": "object",
+      "properties": {
+        "records": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "last_reviewed_at": { "type": "string", "pattern": "^$|^\\d{4}-\\d{2}-\\d{2}$" },
+              "review_count": { "type": "integer", "minimum": 0 },
+              "last_practiced_at": { "type": "string", "pattern": "^$|^\\d{4}-\\d{2}-\\d{2}$" },
+              "practice_count": { "type": "integer", "minimum": 0 },
+              "mastery": { "type": "number", "minimum": 0, "maximum": 1 },
+              "stage": {
+                "type": "string",
+                "enum": ["active", "fading", "dormant", "synthesizing", "remnant", "theory_star"]
+              },
+              "synthesized_into": { "type": "string" }
+            },
+            "additionalProperties": true
+          }
+        },
+        "syntheses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "theory_node_id", "predecessor_node_ids", "created_at", "summary", "mode"],
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "theory_node_id": { "type": "string", "minLength": 1 },
+              "predecessor_node_ids": {
+                "type": "array",
+                "minItems": 1,
+                "items": { "type": "string", "minLength": 1 }
+              },
+              "created_at": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+              "summary": { "type": "string" },
+              "evidence": { "type": "string" },
+              "mode": { "type": "string", "const": "accretion" }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "node": {
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "label",
+        "summary",
+        "confidence"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "book",
+            "concept",
+            "method",
+            "claim",
+            "example",
+            "action",
+            "reflection",
+            "question",
+            "value",
+            "belief",
+            "emotion",
+            "decision",
+            "theme"
+          ]
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "confidence": {
+          "type": "string",
+          "enum": [
+            "high",
+            "medium",
+            "low"
+          ]
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "source_trace": {
+              "type": "object",
+              "properties": {
+                "work": { "type": "string" },
+                "passage": { "type": "string" },
+                "source_url": { "type": "string" },
+                "verified_at": {
+                  "type": "string",
+                  "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                },
+                "source_confidence": {
+                  "type": "string",
+                  "enum": [
+                    "high",
+                    "medium",
+                    "low"
+                  ]
+                }
+              },
+              "additionalProperties": true
+            },
+            "cosmos": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "type": "string",
+                  "enum": [
+                    "galaxy",
+                    "star",
+                    "planet",
+                    "bridge",
+                    "comet"
+                  ]
+                },
+                "mass": { "type": "number" },
+                "source_anchor": { "type": "string" },
+                "recurrence": { "type": "number" },
+                "orbit_bias": { "type": "number" },
+                "review_half_life_days": { "type": "number" }
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "edge": {
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "from",
+        "to",
+        "confidence"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "contains",
+            "supports",
+            "contrasts",
+            "extends",
+            "applies_to",
+            "reminds_of",
+            "causes",
+            "challenges",
+            "reframes",
+            "evidences",
+            "updates",
+            "recurs_in",
+            "synthesizes"
+          ]
+        },
+        "from": {
+          "type": "string",
+          "minLength": 1
+        },
+        "to": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string"
+        },
+        "evidence": {
+          "type": "string"
+        },
+        "confidence": {
+          "type": "string",
+          "enum": [
+            "high",
+            "medium",
+            "low"
+          ]
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "cosmos": {
+              "type": "object",
+              "properties": {
+                "strength": { "type": "number" },
+                "distance": {
+                  "anyOf": [
+                    { "type": "number" },
+                    {
+                      "type": "string",
+                      "enum": [
+                        "near",
+                        "medium",
+                        "far"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

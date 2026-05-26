@@ -1,0 +1,167 @@
+{
+  "version": 1,
+  "updated_at": "2026-05-26",
+  "nodes": [
+    {
+      "id": "theme:metacognitive-practice",
+      "type": "theme",
+      "label": "元认知练习闭环",
+      "summary": "把输入、追问、行动、复习连接成可重复的个人知识成长循环。",
+      "tags": ["元认知", "知识管理", "行动复盘"],
+      "confidence": "high",
+      "metadata": {
+        "card_path": "knowledge/cards/metacognitive-practice-loop.md",
+        "cosmos": {
+          "role": "galaxy",
+          "mass": 13,
+          "recurrence": 3
+        }
+      }
+    },
+    {
+      "id": "book:demo-deep-work",
+      "type": "book",
+      "label": "示例书籍：深度工作",
+      "summary": "用一段公开示例展示书籍如何成为恒星，向概念、方法和行动节点提供来源。",
+      "source": "theme:metacognitive-practice",
+      "tags": ["读书", "注意力", "示例"],
+      "confidence": "medium",
+      "metadata": {
+        "book_note": "knowledge/books/demo-deep-work.md",
+        "author": "示例作者",
+        "cosmos": {
+          "role": "star",
+          "source_anchor": "theme:metacognitive-practice"
+        }
+      }
+    },
+    {
+      "id": "concept:attention-boundary",
+      "type": "concept",
+      "label": "注意力边界",
+      "summary": "管理知识前，先管理注意力入口：不是所有材料都值得进入长期知识库。",
+      "source": "book:demo-deep-work",
+      "tags": ["注意力", "筛选", "知识入口"],
+      "confidence": "medium",
+      "metadata": {
+        "card_path": "knowledge/cards/attention-boundary.md",
+        "cosmos": {
+          "source_anchor": "theme:metacognitive-practice"
+        }
+      }
+    },
+    {
+      "id": "method:sharp-question-loop",
+      "type": "method",
+      "label": "尖锐追问循环",
+      "summary": "每次沉淀知识前，用事实、反例、边界、行动信号四类问题压实理解。",
+      "source": "theme:metacognitive-practice",
+      "tags": ["追问", "理解", "方法"],
+      "confidence": "high",
+      "metadata": {
+        "card_path": "knowledge/cards/sharp-question-loop.md",
+        "cosmos": {
+          "source_anchor": "theme:metacognitive-practice",
+          "recurrence": 2
+        }
+      }
+    },
+    {
+      "id": "action:daily-knowledge-review",
+      "type": "action",
+      "label": "每日 10 分钟知识回访",
+      "summary": "每天只选择一个模糊点，回答它今天是否被真实场景检验过。",
+      "source": "method:sharp-question-loop",
+      "tags": ["行动实验", "复习", "自动化"],
+      "confidence": "medium",
+      "metadata": {
+        "card_path": "knowledge/cards/daily-knowledge-review.md",
+        "status": "active",
+        "review_questions": ["今天哪个知识点真的改变了我的判断？", "它有什么反例或失败场景？"],
+        "cosmos": {
+          "source_anchor": "theme:metacognitive-practice",
+          "review_half_life_days": 14
+        }
+      }
+    },
+    {
+      "id": "question:automation-calibration",
+      "type": "question",
+      "label": "自动化应该提醒什么，而不是制造噪音？",
+      "summary": "提醒不是越多越好；真正有用的是把用户带回一个值得深聊的问题或行动回访。",
+      "source": "action:daily-knowledge-review",
+      "tags": ["自动化", "提醒", "待追问"],
+      "confidence": "low",
+      "metadata": {
+        "card_path": "knowledge/cards/automation-calibration.md",
+        "status": "open",
+        "cosmos": {
+          "role": "comet",
+          "source_anchor": "theme:metacognitive-practice"
+        }
+      }
+    },
+    {
+      "id": "claim:management-over-clipping",
+      "type": "claim",
+      "label": "知识管理不是剪藏，而是持续校正判断",
+      "summary": "一个知识系统的价值不在收集多少条目，而在能否帮助用户提出更好的问题、做出更稳的行动。",
+      "source": "theme:metacognitive-practice",
+      "tags": ["知识管理", "判断", "产品原则"],
+      "confidence": "high",
+      "metadata": {
+        "card_path": "knowledge/cards/management-over-clipping.md",
+        "cosmos": {
+          "source_anchor": "theme:metacognitive-practice"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge:demo-deep-work:contains:attention-boundary",
+      "type": "contains",
+      "from": "book:demo-deep-work",
+      "to": "concept:attention-boundary",
+      "label": "书籍提供注意力筛选示例",
+      "evidence": "示例书籍节点展示来源如何支撑概念节点。",
+      "confidence": "medium"
+    },
+    {
+      "id": "edge:attention-boundary:supports:management-over-clipping",
+      "type": "supports",
+      "from": "concept:attention-boundary",
+      "to": "claim:management-over-clipping",
+      "label": "入口筛选支持反剪藏原则",
+      "evidence": "不是所有材料都值得入库，入库前要判断是否会改变行动或理解。",
+      "confidence": "medium"
+    },
+    {
+      "id": "edge:sharp-question-loop:applies_to:daily-review",
+      "type": "applies_to",
+      "from": "method:sharp-question-loop",
+      "to": "action:daily-knowledge-review",
+      "label": "把追问方法落到每日回访",
+      "evidence": "行动节点要求每天只选择一个模糊点深聊。",
+      "confidence": "high"
+    },
+    {
+      "id": "edge:daily-review:recurs_in:automation-calibration",
+      "type": "recurs_in",
+      "from": "action:daily-knowledge-review",
+      "to": "question:automation-calibration",
+      "label": "行动回访暴露提醒边界",
+      "evidence": "自动化需要选择少量高价值问题，而不是发送噪音。",
+      "confidence": "low"
+    },
+    {
+      "id": "edge:metacognitive-practice:reframes:management-over-clipping",
+      "type": "reframes",
+      "from": "theme:metacognitive-practice",
+      "to": "claim:management-over-clipping",
+      "label": "用成长闭环重解释知识管理",
+      "evidence": "知识管理被定义为输入、追问、行动、复习的闭环。",
+      "confidence": "high"
+    }
+  ]
+}

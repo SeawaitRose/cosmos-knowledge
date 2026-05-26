@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>知识星球</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="cosmic-shell">
+      <canvas id="ambientCanvas" aria-hidden="true"></canvas>
+
+      <header class="site-header">
+        <button class="brand-button" data-view="home" aria-label="返回首页">
+          <span class="brand-orb" aria-hidden="true"></span>
+          <span>
+            <strong>知识星球</strong>
+            <small id="graphStatus">读取中</small>
+          </span>
+        </button>
+
+        <nav class="top-nav" aria-label="核心入口">
+          <button class="nav-pill active" data-view="home">总览</button>
+          <button class="nav-pill" data-view="cosmos">知识星球</button>
+          <button class="nav-pill" data-view="tasks">成长任务</button>
+          <button class="nav-pill" data-view="manage">管理</button>
+          <button class="nav-pill" data-view="automation">自动化</button>
+          <button class="nav-pill" data-view="archive">知识档案</button>
+        </nav>
+
+        <div class="header-actions">
+          <button class="ghost-button" data-view="import">导入知识</button>
+          <button class="ghost-button" data-view="examples">示例库</button>
+        </div>
+      </header>
+
+      <main class="site-main">
+        <section class="view active" data-view-panel="home">
+          <div class="hero-grid">
+            <section class="hero-copy">
+              <p class="eyebrow">Personal Knowledge Universe</p>
+              <h1>把对话、读书和复盘，沉淀成你的知识星系。</h1>
+              <p class="hero-text">
+                这里展示并管理 Codex 与你共同生成的知识节点、关系、行动实验和待追问问题。内容从本地
+                <code>graph.json</code> 与 Markdown 笔记中读取，保持文件化、安全、可追溯。
+              </p>
+              <div class="hero-actions">
+                <button class="primary-button" data-view="cosmos">进入知识星球</button>
+                <button class="secondary-button" data-view="import">上传知识包</button>
+              </div>
+            </section>
+
+            <section class="planet-preview" aria-label="知识星球预览">
+              <canvas id="previewCanvas"></canvas>
+              <div class="planet-stat">
+                <strong id="previewNodeCount">0</strong>
+                <span>知识节点</span>
+              </div>
+            </section>
+          </div>
+
+          <section class="metric-row" id="metricGrid"></section>
+
+          <section class="glass-panel daily-brief-panel" aria-label="今日认知成长对话">
+            <div class="panel-title">
+              <div>
+                <p class="eyebrow">Daily Growth Brief</p>
+                <h2>今日对话</h2>
+              </div>
+              <span id="dailyBriefMeta">等待生成</span>
+            </div>
+            <div class="daily-brief-layout">
+              <article class="daily-focus">
+                <span>最该聊</span>
+                <strong id="dailyFocusQuestion">暂无每日简报</strong>
+                <p id="dailyFocusReason">运行 <code>python3 -B scripts/daily_growth_brief.py</code> 后显示今天的对话议程。</p>
+              </article>
+              <article>
+                <div class="mini-title">模糊点</div>
+                <div id="dailyFuzzyList" class="stack-list compact"></div>
+              </article>
+              <article>
+                <div class="mini-title">给 AI 的开场白</div>
+                <textarea id="dailyAiPrompt" readonly spellcheck="false"></textarea>
+              </article>
+            </div>
+          </section>
+
+          <section class="entry-grid" aria-label="核心入口">
+            <button class="entry-card" data-view="cosmos">
+              <span>01</span>
+              <strong>知识星球</strong>
+              <p>用宇宙视角探索书籍、概念、方法、行动之间的轨道关系。</p>
+            </button>
+            <button class="entry-card" data-view="tasks">
+              <span>02</span>
+              <strong>成长任务</strong>
+              <p>聚焦待追问、复习问题、行动实验和知识健康。</p>
+            </button>
+            <button class="entry-card" data-view="archive">
+              <span>03</span>
+              <strong>知识档案</strong>
+              <p>查看书本、主题、来源文件，并导入标准知识包。</p>
+            </button>
+            <button class="entry-card" data-view="manage">
+              <span>04</span>
+              <strong>管理台</strong>
+              <p>编辑节点、关系、星系归属、复习状态和来源路径。</p>
+            </button>
+          </section>
+
+          <section class="panel-grid">
+            <article class="glass-panel">
+              <div class="panel-title">
+                <h2>建议探索</h2>
+                <span>连接密度最高</span>
+              </div>
+              <div id="suggestedList" class="stack-list"></div>
+            </article>
+            <article class="glass-panel">
+              <div class="panel-title">
+                <h2>待追问</h2>
+                <span>从笔记提取</span>
+              </div>
+              <div id="pendingQuestions" class="stack-list"></div>
+            </article>
+          </section>
+        </section>
+
+        <section class="view" data-view-panel="cosmos">
+          <div class="cosmos-stage">
+            <canvas id="cosmos3dCanvas"></canvas>
+            <canvas id="cosmosCanvas"></canvas>
+            <div class="gesture-hud" id="gestureHud" hidden>
+              <video id="gestureVideo" autoplay playsinline muted></video>
+              <canvas id="gestureCanvas"></canvas>
+              <div>
+                <strong>手势模式</strong>
+                <span id="gestureStatus">等待摄像头</span>
+              </div>
+            </div>
+            <div class="cosmos-toolbar">
+              <div class="cosmos-titlebar">
+                <p class="eyebrow">Knowledge Cosmos</p>
+                <h2>知识星球</h2>
+                <span>触控板旋转 · 捏合缩放 · Shift 平移</span>
+              </div>
+              <div class="toolbar-controls">
+                <input id="searchInput" type="search" placeholder="搜索：觉察 / 认知觉醒 / 目标下限" autocomplete="off" />
+                <select id="typeFilter" aria-label="类型筛选"></select>
+                <select id="tagFilter" aria-label="标签筛选"></select>
+                <select id="confidenceFilter" aria-label="置信度筛选">
+                  <option value="">全部置信度</option>
+                  <option value="high">high</option>
+                  <option value="medium">medium</option>
+                  <option value="low">low</option>
+                </select>
+              </div>
+              <div class="cosmos-actions">
+                <div class="mode-toggle lens-toggle" aria-label="观测镜头">
+                  <button class="active" id="galaxyViewButton" type="button">元认知星系</button>
+                  <button id="metaViewButton" type="button">元认知</button>
+                  <button id="cometViewButton" type="button">彗星</button>
+                </div>
+                <div class="mode-toggle" aria-label="操作模式">
+                  <button class="active" id="touchModeButton" type="button">触控板</button>
+                  <button id="cameraModeButton" type="button">摄像头手势</button>
+                </div>
+                <button class="ghost-button" id="pathModeButton" type="button">推导路径</button>
+                <button class="ghost-button" id="resetCameraButton" type="button">重置视角</button>
+                <button class="ghost-button" data-view="home" type="button">退出星球</button>
+              </div>
+            </div>
+            <div class="review-timeline" aria-label="艾宾浩斯遗忘曲线时间播放器">
+              <button class="timeline-play" id="reviewTimelineToggle" type="button" aria-label="暂停遗忘曲线动画">暂停</button>
+              <div class="timeline-body">
+                <div class="timeline-meta">
+                  <span>遗忘曲线</span>
+                  <strong id="reviewTimelineLabel">今天</strong>
+                </div>
+                <input id="reviewTimeline" type="range" min="0" max="240" step="1" value="0" />
+                <div class="timeline-scale" aria-hidden="true">
+                  <span>今天</span>
+                  <span>30天</span>
+                  <span>120天</span>
+                  <span>240天</span>
+                </div>
+              </div>
+              <div class="timeline-stats" id="reviewTimelineStats">等待知识生命史</div>
+            </div>
+            <div class="cosmos-hint" id="cosmosHint">捏合缩放，双指滑动或拖拽漫游</div>
+          </div>
+        </section>
+
+        <section class="view" data-view-panel="tasks">
+          <div class="section-heading">
+            <p class="eyebrow">Growth Tasks</p>
+            <h2>成长任务</h2>
+          </div>
+          <div class="panel-grid">
+            <article class="glass-panel">
+              <div class="panel-title">
+                <h2>行动实验</h2>
+                <span>action 节点</span>
+              </div>
+              <div id="actionList" class="stack-list"></div>
+            </article>
+            <article class="glass-panel">
+              <div class="panel-title">
+                <h2>复习与追问</h2>
+                <span>Markdown + question</span>
+              </div>
+              <div id="reviewList" class="stack-list"></div>
+            </article>
+            <article class="glass-panel">
+              <div class="panel-title">
+                <h2>知识健康</h2>
+                <span>结构检查</span>
+              </div>
+              <div id="healthSummary" class="stack-list"></div>
+            </article>
+            <article class="glass-panel">
+              <div class="panel-title">
+                <h2>维护建议</h2>
+                <span>下一步补强</span>
+              </div>
+              <div id="healthSuggestions" class="stack-list"></div>
+            </article>
+            <article class="glass-panel">
+              <div class="panel-title">
+                <h2>今日模糊点</h2>
+                <span>daily brief</span>
+              </div>
+              <div id="taskFuzzyList" class="stack-list"></div>
+            </article>
+            <article class="glass-panel">
+              <div class="panel-title">
+                <h2>行动回访</h2>
+                <span>active action</span>
+              </div>
+              <div id="taskActionReview" class="stack-list"></div>
+            </article>
+            <article class="glass-panel wide">
+              <div class="panel-title">
+                <h2>推荐阅读</h2>
+                <span>知识缺口 + 成长路线</span>
+              </div>
+              <div id="taskRecommendation" class="stack-list"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" data-view-panel="archive">
+          <div class="section-heading split">
+            <div>
+              <p class="eyebrow">Knowledge Archive</p>
+              <h2>知识档案</h2>
+            </div>
+            <div class="inline-actions">
+              <button class="secondary-button" data-view="import">导入知识</button>
+              <button class="ghost-button" data-view="guide">使用说明</button>
+            </div>
+          </div>
+          <div class="archive-layout">
+            <article class="glass-panel">
+              <div class="panel-title">
+                <h2>书本</h2>
+                <span id="bookCount">0 本</span>
+              </div>
+              <div id="bookList" class="stack-list"></div>
+            </article>
+            <article class="glass-panel">
+              <div class="panel-title">
+                <h2>主题/学科</h2>
+                <span>标签 + discipline</span>
+              </div>
+              <div id="themeList" class="theme-grid"></div>
+            </article>
+            <article class="glass-panel wide">
+              <div class="panel-title">
+                <h2>来源档案</h2>
+                <span>可追溯材料</span>
+              </div>
+              <div id="sourceList" class="stack-list"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" data-view-panel="manage">
+          <div class="section-heading split">
+            <div>
+              <p class="eyebrow">Knowledge Management</p>
+              <h2>知识管理台</h2>
+              <p>在网站里维护星系、行星、彗星、关系和生命周期。所有改动都会写回本地 Markdown/JSON 文件。</p>
+            </div>
+            <div class="inline-actions">
+              <button class="secondary-button" id="refreshManageButton" type="button">刷新数据</button>
+              <button class="ghost-button" data-view="cosmos" type="button">回到星球</button>
+            </div>
+          </div>
+          <div class="manager-layout">
+            <article class="glass-panel manager-list-panel">
+              <div class="panel-title">
+                <h2>节点</h2>
+                <span id="managerStatus">等待服务</span>
+              </div>
+              <input id="managerSearchInput" type="search" placeholder="筛选节点、标签或摘要" autocomplete="off" />
+              <div id="managerNodeList" class="manager-node-list"></div>
+            </article>
+
+            <article class="glass-panel manager-editor-panel">
+              <div class="panel-title">
+                <h2>节点编辑</h2>
+                <span id="managerNodeMeta">未选择</span>
+              </div>
+              <div class="form-grid">
+                <label>节点 ID<input id="managerNodeId" readonly /></label>
+                <label>类型<select id="managerNodeType"></select></label>
+                <label>名称<input id="managerNodeLabel" /></label>
+                <label>置信度<select id="managerNodeConfidence"></select></label>
+                <label class="wide">摘要<textarea id="managerNodeSummary"></textarea></label>
+                <label>标签<input id="managerNodeTags" placeholder="用逗号分隔" /></label>
+                <label>来源节点/路径<input id="managerNodeSource" /></label>
+                <label>宇宙角色<select id="managerCosmosRole"></select></label>
+                <label>元认知星系<select id="managerSourceAnchor"></select></label>
+                <label>状态<select id="managerNodeStatus"></select></label>
+                <label class="wide">文档路径<input id="managerCardPath" placeholder="knowledge/cards/example.md" /></label>
+              </div>
+              <div class="inline-actions">
+                <button class="primary-button" id="saveNodeButton" type="button">保存节点</button>
+                <button class="secondary-button" id="openNodeInCosmosButton" type="button">在星球中查看</button>
+                <button class="ghost-button danger" id="deleteNodeButton" type="button">删除节点</button>
+              </div>
+              <div id="managerNodeReport" class="stack-list compact"></div>
+            </article>
+
+            <article class="glass-panel manager-editor-panel">
+              <div class="panel-title">
+                <h2>关系编辑</h2>
+                <span id="managerEdgeMeta">新增或修改</span>
+              </div>
+              <div class="form-grid">
+                <label class="wide">选择关系<select id="managerEdgeSelect"></select></label>
+                <label>关系 ID<input id="managerEdgeId" placeholder="edge:from:type:to" /></label>
+                <label>关系类型<select id="managerEdgeType"></select></label>
+                <label>起点<select id="managerEdgeFrom"></select></label>
+                <label>终点<select id="managerEdgeTo"></select></label>
+                <label>置信度<select id="managerEdgeConfidence"></select></label>
+                <label class="wide">证据<textarea id="managerEdgeEvidence"></textarea></label>
+              </div>
+              <div class="inline-actions">
+                <button class="primary-button" id="saveEdgeButton" type="button">保存关系</button>
+                <button class="ghost-button danger" id="deleteEdgeButton" type="button">删除关系</button>
+              </div>
+              <div id="managerEdgeReport" class="stack-list compact"></div>
+            </article>
+
+            <article class="glass-panel manager-editor-panel">
+              <div class="panel-title">
+                <h2>生命史</h2>
+                <span>复习 / 实践 / 掌握度</span>
+              </div>
+              <div class="form-grid">
+                <label>最近复习<input id="managerLastReviewed" type="date" /></label>
+                <label>复习次数<input id="managerReviewCount" type="number" min="0" step="1" /></label>
+                <label>最近实践<input id="managerLastPracticed" type="date" /></label>
+                <label>实践次数<input id="managerPracticeCount" type="number" min="0" step="1" /></label>
+                <label>掌握度<input id="managerMastery" type="number" min="0" max="1" step="0.05" /></label>
+                <label>阶段<select id="managerLifecycleStage"></select></label>
+              </div>
+              <div class="inline-actions">
+                <button class="primary-button" id="saveLifecycleButton" type="button">保存生命史</button>
+              </div>
+              <div id="managerLifecycleReport" class="stack-list compact"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" data-view-panel="automation">
+          <div class="section-heading split">
+            <div>
+              <p class="eyebrow">Automation</p>
+              <h2>自动提醒与飞书机器人</h2>
+              <p>本地服务会按北京时间生成每日/每周认知提醒，并通过你填写的飞书机器人 webhook 发送。</p>
+            </div>
+            <div class="inline-actions">
+              <button class="secondary-button" id="refreshAutomationButton" type="button">校准北京时间</button>
+            </div>
+          </div>
+          <div class="automation-layout">
+            <article class="glass-panel">
+              <div class="panel-title">
+                <h2>北京时间</h2>
+                <span id="beijingTimeStatus">等待校准</span>
+              </div>
+              <div id="timeCalibration" class="stack-list"></div>
+            </article>
+            <article class="glass-panel">
+              <div class="panel-title">
+                <h2>飞书配置</h2>
+                <span id="webhookStatus">未配置</span>
+              </div>
+              <div class="form-grid">
+                <label class="wide">Webhook<input id="feishuWebhookInput" type="password" placeholder="https://open.feishu.cn/open-apis/bot/v2/hook/..." /></label>
+                <label>每日提醒<select id="dailyEnabledInput"><option value="false">关闭</option><option value="true">开启</option></select></label>
+                <label>每日时间<input id="dailyTimeInput" type="time" value="09:00" /></label>
+                <label>每周提醒<select id="weeklyEnabledInput"><option value="false">关闭</option><option value="true">开启</option></select></label>
+                <label>每周日期<select id="weeklyDayInput"></select></label>
+                <label>每周时间<input id="weeklyTimeInput" type="time" value="18:00" /></label>
+              </div>
+              <div class="inline-actions">
+                <button class="primary-button" id="saveAutomationButton" type="button">保存配置</button>
+                <button class="secondary-button" id="testDailyButton" type="button">测试每日</button>
+                <button class="secondary-button" id="testWeeklyButton" type="button">测试每周</button>
+              </div>
+              <div id="automationReport" class="stack-list compact"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" data-view-panel="import">
+          <div class="section-heading">
+            <p class="eyebrow">Knowledge Package</p>
+            <h2>导入知识预检</h2>
+            <p>上传标准知识包 JSON。网站会先做预检；本地服务开启时，可以直接从页面合并入库。</p>
+          </div>
+          <div class="import-grid">
+            <article class="glass-panel">
+              <label class="upload-box" for="packageInput">
+                <span>选择 Knowledge Package JSON</span>
+                <small>支持由 personal-knowledge-growth skill 生成的标准知识包。</small>
+              </label>
+              <input id="packageInput" class="file-input" type="file" accept="application/json,.json" />
+              <div id="packageSummary" class="stack-list"></div>
+            </article>
+            <article class="glass-panel">
+              <div class="panel-title">
+                <h2>预检报告</h2>
+                <span id="packageStatus">等待上传</span>
+              </div>
+              <div id="packageReport" class="stack-list"></div>
+            </article>
+            <article class="glass-panel wide">
+              <div class="panel-title">
+                <h2>合并</h2>
+                <span>预检通过后使用</span>
+              </div>
+              <div class="inline-actions">
+                <button class="primary-button" id="mergePackageButton" type="button">在网站中合并</button>
+                <button class="secondary-button" id="dryRunPackageButton" type="button">本地 dry-run</button>
+              </div>
+              <textarea id="mergeInstruction" readonly spellcheck="false"></textarea>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" data-view-panel="examples">
+          <div class="section-heading">
+            <p class="eyebrow">Example Knowledge Base</p>
+            <h2>示例知识库</h2>
+            <p>GitHub 版本默认提供一个很小的示例库。你可以恢复示例，也可以清空示例后开始自己的知识宇宙。</p>
+          </div>
+          <div class="panel-grid">
+            <article class="glass-panel">
+              <div class="panel-title">
+                <h2>恢复示例</h2>
+                <span>examples/demo-knowledge</span>
+              </div>
+              <p>把当前 <code>knowledge/</code> 替换成演示用星系、书籍、概念、行动和开放问题。</p>
+              <button class="secondary-button" id="resetDemoButton" type="button">恢复示例知识库</button>
+            </article>
+            <article class="glass-panel">
+              <div class="panel-title">
+                <h2>清空示例</h2>
+                <span>开始自己的知识库</span>
+              </div>
+              <p>保留目录结构和空图谱，删除示例节点、示例报告和示例文档。</p>
+              <button class="ghost-button danger" id="resetBlankButton" type="button">清空为新知识库</button>
+            </article>
+            <article class="glass-panel wide">
+              <div class="panel-title">
+                <h2>操作结果</h2>
+                <span id="examplesStatus">等待操作</span>
+              </div>
+              <div id="examplesReport" class="stack-list"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" data-view-panel="guide">
+          <div class="guide-layout">
+            <article class="guide-hero">
+              <p class="eyebrow">Public Guide</p>
+              <h2>这套知识库如何运转</h2>
+              <p>
+                你和 Codex 的对话负责产生高质量知识，skill 负责深度追问和标准化，Markdown 负责阅读，
+                <code>graph.json</code> 负责关系，网站负责管理、展示和自动化。
+              </p>
+            </article>
+            <article class="glass-panel">
+              <h3>1. 从对话到知识</h3>
+              <p>你输入读书感悟、复盘、牢骚、想法或决策。skill 先识别场景，再温和但锋利地追问，最后只沉淀高价值内容。</p>
+            </article>
+            <article class="glass-panel">
+              <h3>2. 标准知识包</h3>
+              <p>每次入库先生成 Knowledge Package JSON，里面同时包含 Markdown 文档和图谱补丁。这是对话、网站和别人导入内容之间的统一标准。</p>
+            </article>
+            <article class="glass-panel">
+              <h3>3. 自动合并</h3>
+              <p>合并脚本会校验知识包，写入 <code>knowledge/books/</code>、<code>knowledge/cards/</code>、<code>knowledge/imports/</code>，并更新 <code>graph.json</code>。</p>
+            </article>
+            <article class="glass-panel">
+              <h3>4. 图谱数据</h3>
+              <p><code>knowledge/data/graph.json</code> 存储节点和关系。网站根据它生成星体、轨道、任务和健康检查。</p>
+            </article>
+            <article class="glass-panel">
+              <h3>5. 外部上传</h3>
+              <p>别人也可以用同一个 skill 生成 Knowledge Package JSON。上传到网站后先预检，确认无误再交给 Codex 合并。</p>
+            </article>
+            <article class="glass-panel">
+              <h3>6. 维护循环</h3>
+              <p>每次入库后运行图谱校验、维护索引和健康检查，再打开知识星球观察结构是否更清晰。</p>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <aside class="detail-dock" id="detailPanel" aria-label="知识详情">
+        <div class="detail-empty">
+          <span class="mini-orb"></span>
+          <h3>选择一颗星体</h3>
+          <p>查看摘要、轨道关系、来源和对应文档。</p>
+        </div>
+      </aside>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

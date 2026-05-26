@@ -1,0 +1,13 @@
+{
+  "books": [
+    {
+      "title": "示例：提问的艺术",
+      "author": "Demo",
+      "domain": ["提问", "学习方法"],
+      "why_read": "当前示例库强调尖锐追问，下一步可以补充提问质量的判断标准。",
+      "connects_to_nodes": ["method:sharp-question-loop"],
+      "difficulty": "easy",
+      "priority": "medium"
+    }
+  ]
+}
